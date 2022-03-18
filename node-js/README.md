@@ -11,5 +11,5 @@ npm install
 
 3. Generate token
 ```bash
-node generate_token.py
+node generate_token.js
 ```
