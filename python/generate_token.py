@@ -11,12 +11,20 @@ key_id = os.getenv('KEY_ID')
 aud_url = os.getenv('AUD_URL')
 
 def generate_jwt():
+        if not isKeyAvailable(api_key, key_id, aud_url):
+            print(
+                "\nOne or more of the following environment variables are missing,\n"
+                "API_KEY\n"
+                "KEY_ID\n"
+                "AUD_URL\n"
+            )
+            return
 
         curr_time = datetime.utcnow()
         payload = {
             "aud": aud_url,
             "iat": curr_time,
-            "exp": curr_time + timedelta(seconds=10),
+            "exp": curr_time + timedelta(seconds=300),
             "iss": key_id,
             "metadata": {
                 "reason": "fetch usages",
@@ -29,5 +37,10 @@ def generate_jwt():
         token = jwt.encode(payload, signature, algorithm='HS512',
                      headers={"kid": key_id})
         print("Token: {}" .format(token))
+
+def isKeyAvailable(api_key, key_id, aud_url):
+    if (api_key and key_id and aud_url):
+        return True
+    return False
 
 generate_jwt()
